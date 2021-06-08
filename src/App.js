@@ -207,11 +207,11 @@ function App() {
         animate={state.isPlaying}
       />
 
-      {/*<VisuallyHidden>
+      <VisuallyHidden>
         <Alert>
           Item {state.currentIndex + 1} of {slides.length}
         </Alert>
-      </VisuallyHidden>*/}
+      </VisuallyHidden>
     </Carousel>
   );
 }
