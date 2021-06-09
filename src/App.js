@@ -1,8 +1,17 @@
-import React, { useState, useReducer, useEffect, useRef } from "react";
-import "./whatevs/index.css";
+import React, {
+  useState,
+  useReducer,
+  useEffect,
+  useRef
+} from "react";
 import Alert from "@reach/alert";
 import VisuallyHidden from "@reach/visually-hidden";
-import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
+import {
+  FaPlay,
+  FaPause,
+  FaForward,
+  FaBackward
+} from "react-icons/fa";
 
 import slides from "./whatevs/slides";
 import useProgress from "./useProgress";
@@ -10,21 +19,33 @@ import useProgress from "./useProgress";
 let SLIDE_DURATION = 3000;
 
 function Carousel(props) {
-  return <section className="Carousel" {...props} />;
+  return (
+    <section className="Carousel" {...props} />
+  );
 }
 
 function Slides(props) {
   return <ul {...props} />;
 }
 
-function Slide({ isCurrent, takeFocus, image, id, title, children }) {
+function Slide({
+  isCurrent,
+  takeFocus,
+  image,
+  id,
+  title,
+  children
+}) {
   let ref = useRef();
 
-  useEffect(() => {
-    if (isCurrent && takeFocus) {
-      ref.current.focus();
-    }
-  }, [isCurrent, takeFocus]);
+  useEffect(
+    () => {
+      if (isCurrent && takeFocus) {
+        ref.current.focus();
+      }
+    },
+    [isCurrent, takeFocus]
+  );
 
   return (
     <li
@@ -62,7 +83,9 @@ function Controls(props) {
 }
 
 function IconButton(props) {
-  return <button {...props} className="IconButton" />;
+  return (
+    <button {...props} className="IconButton" />
+  );
 }
 
 function ProgressBar({ animate, time }) {
@@ -70,52 +93,64 @@ function ProgressBar({ animate, time }) {
 
   return (
     <div className="ProgressBar">
-      <div style={{ width: `${progress * 100}%` }} />
+      <div
+        style={{ width: `${progress * 100}%` }}
+      />
     </div>
   );
 }
 
 function SpacerGif({ width }) {
-  return <div style={{ display: "inline-block", width }} />;
+  return (
+    <div
+      style={{ display: "inline-block", width }}
+    />
+  );
 }
 
 function App() {
   let [state, dispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
-        case "PROGRESS":
         case "NEXT":
+        case "PROGRESS":
           return {
             ...state,
-            takeFocus: false,
             isPlaying: action.type === "PROGRESS",
-            currentIndex: (state.currentIndex + 1) % slides.length,
-          };
-        case "PREV":
-          return {
-            ...state,
-            takeFocus: false,
-            isPlaying: false,
             currentIndex:
-              (state.currentIndex - 1 + slides.length) % slides.length,
-          };
-        case "PLAY":
-          return {
-            ...state,
-            takeFocus: false,
-            isPlaying: true,
+              (state.currentIndex + 1) %
+              slides.length
           };
         case "PAUSE":
           return {
             ...state,
-            takeFocus: false,
-            isPlaying: false,
+            isPlaying: false
+          };
+        case "PLAY":
+          return {
+            ...state,
+            isPlaying: true
+          };
+        case "PREV":
+          return {
+            ...state,
+            currentIndex:
+              (state.currentIndex -
+                1 +
+                slides.length) %
+              slides.length,
+            isPlaying: false
           };
         case "GOTO":
           return {
             ...state,
             takeFocus: true,
-            currentIndex: action.index,
+            currentIndex: action.index
+          };
+        case "UNSET_FOCUS":
+          return {
+            ...state,
+            takeFocus: false
           };
         default:
           return state;
@@ -124,18 +159,30 @@ function App() {
     {
       currentIndex: 0,
       isPlaying: false,
-      takeFocus: false,
+      takeFocus: false
     }
   );
 
-  useEffect(() => {
-    if (state.isPlaying) {
-      let timeout = setTimeout(() => {
-        dispatch({ type: "PROGRESS" });
-      }, SLIDE_DURATION);
-      return () => clearTimeout(timeout);
-    }
-  }, [state.currentIndex, state.isPlaying]);
+  useEffect(
+    () => {
+      if (state.isPlaying) {
+        let timeout = setTimeout(() => {
+          dispatch({ type: "PROGRESS" });
+        }, SLIDE_DURATION);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [state.currentIndex, state.isPlaying]
+  );
+
+  useEffect(
+    () => {
+      if (state.takeFocus) {
+        dispatch({ type: "UNSET_FOCUS" });
+      }
+    },
+    [state.takeFocus]
+  );
 
   return (
     <Carousel aria-label="Images from Space">
@@ -209,7 +256,8 @@ function App() {
 
       <VisuallyHidden>
         <Alert>
-          Item {state.currentIndex + 1} of {slides.length}
+          Item {state.currentIndex + 1} of
+          {slides.length}
         </Alert>
       </VisuallyHidden>
     </Carousel>
