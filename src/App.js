@@ -15,6 +15,7 @@ import {
 
 import slides from "./whatevs/slides";
 import useProgress from "./useProgress";
+import "./whatevs/index.css";
 
 let SLIDE_DURATION = 3000;
 
